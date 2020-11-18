@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
+import axios from 'axios';
 
 class RelatedTracks extends React.Component {
   constructor(props) {
@@ -15,11 +16,30 @@ class RelatedTracks extends React.Component {
   }
 
   updateRelated(data) {
-    this.setState({related: data});
+    data.onPlaylists.forEach((item, index) => {
+      this.addToRelated(item, index);
+    });
+  }
+
+  addToRelated(id, index) {
+    axios(`/relatedTracks/${id}`)
+    .then(({ data }) => {
+      data.song = `${10000000 - data.song_id} bottles of beer on the wall`;
+      data.band = `${data.song_id} bottlecaps`;
+      data.image = 'https://i1.sndcdn.com/avatars-000153260008-nj3jj1-t200x200.jpg';
+      if (index === 0) {
+        this.setState({
+          related: [data],
+        });
+      } else {
+        this.setState({
+          related: this.state.related.concat(data),
+        });
+      }
+    })
   }
 
   componentDidMount() {
-    // console.log('MOUNT STATE: 🤪', this.state);
     $.ajax(
       {
         url: `/relatedTracks/${this.song}`,
@@ -31,15 +51,13 @@ class RelatedTracks extends React.Component {
   }
 
   render() {
-    // console.log('RENDER STATE: 🥶', this.state);
-    return this.state.related.map(track => {
+    return this.state.related.map((track) => {
     let plays = [<span key={"spanPlays" + track.song_id}>&#9658;</span>, ` ${track.plays}`];
     let likes = [<span key={"spanLikes" + track.song_id} >&#9829;</span>, ` ${track.likes}`];
     let reposts = [<span key={"spanReposts" + track.song_id}>&#10226;</span>, ` ${track.reposts}`];
     let comments = [<span key={"spanComments" + track.song_id}>&#128488;</span>, ` 3`];
     let image = [<img key={"image" + track.song_id} className="nicholas related-tracks band-image" src={track.image}/>];
     let song = [<p key={"song" + track.song_id} className="nicholas related-tracks song">{track.song}</p>]
-    console.log(track);
     let band = [<p key={"band" + track.song_id} className="nicholas related-tracks band-name">{track.band}</p>]
     return (
       <>
