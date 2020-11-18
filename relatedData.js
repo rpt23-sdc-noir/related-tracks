@@ -109,31 +109,3 @@ module.exports = {
   drop,
   close,
 }
-
-// updateTrack(31,
-//   { song_id: 31 },
-//   (err, data) => {
-//     if (err) {
-//       console.log(`your err: ${err}`);
-//     } else {
-//       console.log(`your data: ${data}`);
-//     }
-//   }
-// );
-
-/**
- * {
-  onPlaylists: [ 48, 95, 79 ],
-  likedBy: [ 37, 94, 47 ],
-  playedBy: [ 31, 66, 52 ],
-  repostedBy: [ 78, 12, 17 ],
-  _id: 5fb45f9d2385035c38743d9b,
-  song_id: 89,
-  plays: 8924,
-  likes: 491,
-  reposts: 47,
-  genre: 'jazz',
-  producedBy: 'bialystock unt bloom',
-  __v: 0
-}
- */
