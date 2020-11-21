@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const chalk = require('chalk');
-const axios = require('axios');
 const parser = require('body-parser');
 const morgan = require('morgan');
 const { addTrack, findTrack, updateTrack, deleteTrack, drop, close } = require('../relatedData.js');
