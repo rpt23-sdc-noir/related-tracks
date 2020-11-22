@@ -108,4 +108,4 @@ module.exports = {
   deleteTrack,
   drop,
   close,
-}
+};
