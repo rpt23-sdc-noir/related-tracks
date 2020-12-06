@@ -3,16 +3,8 @@
 # track shape
 {
   song_id: Number,
-  plays: Number,
-  likes: Number,
-  reposts: Number,
-  comments: Number,
-  genre: String,
-  onPlaylists: [Number],
-  producedBy: String,
-  likedBy: [Number],
-  playedBy: [Number],
-  repostedBy: [Number],
+  genre: Number,
+  producer: Number,
 }
 
 # related tracks song API request & response examples
@@ -45,12 +37,7 @@ Request body:
         "plays": 45,
         "likes": 455,
         "reposts": 4545,
-        "onPlaylists": [67,71,10],
-        "likedBy": [65,89,4],
-        "playedBy": [83,20,41],
-        "repostedBy": [2,84,81],
-        "genre": "ambient",
-        "producedBy": "stock boy",
+        "comments": 4554
       }
 
 Response body:
