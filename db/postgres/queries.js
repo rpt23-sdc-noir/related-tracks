@@ -1,17 +1,19 @@
-const { query, } = require('./index.js');
+const { query } = require('./index.js');
+
+let check = true;
 
 const addTrack = function() {
-  const text = `INSERT INTO tracks (id, genre, producer) VALUES (nextval('tracks_id_seq'), nextval('genres_id_seq'), nextval('prods_id_seq'))`;
-  return query(text, null);
-};
-
-const addProducer = function(name) {
-  const text = `INSERT INTO producers (id, name) VALUES (currval('prods_id_seq'), ${name})`;
-  return query(text, null);
-};
-
-const addGenre = function(name) {
-  const text = `INSERT INTO genres (id, name) VALUES (currval('genres_id_seq'), ${name})`;
+  // const text = `WITH ins1 AS (INSERT INTO tracks (id, genre, producer) VALUES (nextval('tracks_id_seq'), nextval('genres_id_seq'), nextval('prods_id_seq')) RETURNING genre, producer),ins2 AS (INSERT INTO producers(id) SELECT producer FROM ins1),ins3 AS (INSERT INTO genres(id) SELECT genre FROM ins1)
+  // SELECT genre, producer FROM ins1;`;
+  const text = (
+    (check)
+    ?
+    `WITH ins1 AS (INSERT INTO tracks (id, genre, producer) VALUES (nextval('tracks_id_seq'), nextval('genres_id_seq'), nextval('prods_id_seq')) RETURNING genre, producer),ins2 AS (INSERT INTO producers(id) SELECT producer FROM ins1),ins3 AS (INSERT INTO genres(id) SELECT genre FROM ins1)
+    SELECT genre, producer FROM ins1;`
+    :
+    `INSERT INTO tracks (id, genre, producer) VALUES (nextval('tracks_id_seq'), ${Math.floor(Math.random() * 100000) + 1}, ${Math.floor(Math.random() * 1000000) + 1})`
+  );
+  check = !check;
   return query(text, null);
 };
 
@@ -21,7 +23,7 @@ const findTrack = (id) => {
 };
 
 const findTrackData = function(id) {
-  const text = `SELECT (SELECT COUNT(*) FROM plays WHERE track_id = ${id}) AS plays,(SELECT COUNT(*)FROM likes WHERE track_id = ${id}) AS likes,(SELECT COUNT(*) FROM reposts WHERE track_id = ${id}) AS reposts, (SELECT COUNT(*) FROM comments WHERE track_id = ${id}) AS comments`;
+  const text = `SELECT (SELECT COUNT(*) FROM plays WHERE track_id = ${id}) AS plays, (SELECT COUNT(*) FROM likes WHERE track_id = ${id}) AS likes,(SELECT COUNT(*) FROM reposts WHERE track_id = ${id}) AS reposts, (SELECT COUNT(*) FROM comments WHERE track_id = ${id}) AS comments`;
   return query(text, null);
 };
 
@@ -33,6 +35,10 @@ const findRelatedPlaylists = (id) => {
 const findTrackFromPlaylist = (id, track) => {
   const text = `SELECT track_id FROM playlistTracks WHERE playlist_id = ${id} AND track_id <> ${track} LIMIT 1`;
   return query(text, null);
+};
+
+const findCurrentProducer = () => {
+  const text = 'SELECT nextval(prods_id_seq)';
 };
 
 const updateTrack = function(id, genre, producer) {
@@ -55,12 +61,10 @@ const deleteTrack = function (id) {
 
 module.exports = {
   addTrack,
-  addProducer,
   findTrack,
   findTrackData,
   findRelatedPlaylists,
   findTrackFromPlaylist,
   updateTrack,
   deleteTrack,
-  addGenre,
 };
