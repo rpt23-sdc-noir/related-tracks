@@ -1,9 +1,9 @@
+require('newrelic');
 const express = require('express');
 const path = require('path');
 const chalk = require('chalk');
 const parser = require('body-parser');
 const morgan = require('morgan');
-const { addTrack, updateTrack, deleteTrack, } = require('../db/postgres/queries.js');
 const expressStaticGzip = require('express-static-gzip');
 const app = express();
 const tracks = require('./routes/tracks.js');
@@ -21,12 +21,12 @@ app.use('/', expressStaticGzip(path.join(__dirname, '../public'), {
    setHeaders: function (res, path) {
       res.setHeader("Cache-Control", "public, max-age=31536000");
    }
-}))
+}));
 
 app.get('/:current', (req, res) => {
   res.sendFile(path.join(__dirname,'../public/index.html'));
-})
+});
 
 app.listen(port, () => {
   console.log(chalk.yellow(`Listening on port ${port}`));
-})
+});
