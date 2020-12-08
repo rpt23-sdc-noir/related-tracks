@@ -13,7 +13,7 @@ const trowka = [
   },
   {
     playlist_id: (Math.floor(Math.random() * 10000000) + 1),
-  },
+  }
 ];
 
 // export our router to be mounted by the parent application

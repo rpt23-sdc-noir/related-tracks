@@ -20,7 +20,7 @@ app.use('/', expressStaticGzip(path.join(__dirname, '../public'), {
    orderPreference: ['br', 'gz'],
    setHeaders: function (res, path) {
       res.setHeader("Cache-Control", "public, max-age=31536000");
-   },
+   }
 }));
 
 app.get('/:current', (req, res) => {

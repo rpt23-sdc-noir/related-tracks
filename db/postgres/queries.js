@@ -1,4 +1,4 @@
-const { query, } = require('./index.js');
+const { query } = require('./index.js');
 
 let check = true;
 
