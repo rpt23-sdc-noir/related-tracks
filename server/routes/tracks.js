@@ -1,5 +1,6 @@
 const Router = require('express-promise-router');
 const { addTrack, updateTrack, deleteTrack, findTrack, findTrackData, findRelatedPlaylists, findTrackFromPlaylist, } = require('../../db/postgres/queries.js');
+const { checkCache, client } = require('../../db/redis/client.js');
 // create a new express-promise-router
 // this has the same API as the normal express router except
 // it allows you to use async functions as route handlers
@@ -19,13 +20,10 @@ const trowka = [
 // export our router to be mounted by the parent application
 module.exports = router;
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', checkCache, async (req, res) => {
   try {
     let { id } = req.params;
     id = parseInt(id);
-    if (id < 1 || id > 10000000 || id !== id) {
-      return res.status(400).end('no such track');
-    }
     let { rows } = await findRelatedPlaylists(id);
     rows = rows.concat(trowka).slice(0, 3);
     res.write('[');
@@ -42,7 +40,12 @@ router.get('/:id', async (req, res) => {
       let trackId = tracks.rows[0].track_id;
       let track = await findTrackData(trackId);
       track.rows[0].song_id = trackId;
-      res.write(JSON.stringify(track.rows[0]));
+      const strung = JSON.stringify(track.rows[0]);
+      await client.zadd('relatedtracks', id, strung);
+      // client.zrangebyscore('relatedtracks', id, id, (err, data) => {
+      //   console.log(`data in route: `, data);
+      // });
+      res.write(strung);
       if (index < 2) {
         res.write(',');
       }
@@ -54,7 +57,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.get('/current/:id', async (req, res) => {
+router.get('/current/:id', checkCache, async (req, res) => {
   try {
     let { id } = req.params;
     id = parseInt(id);
