@@ -1,4 +1,15 @@
-const { createBigRecord } = require('../seeds/createBR.js');
-const { generateUser } = require('../utils/generators');
+const fs = require('fs');
 
-createBigRecord(5000000, generateUser, 4, 'users', 'id,name');
+const writeU = () => {
+  let writeUsers = fs.createWriteStream(`./data/users/0.csv`);
+
+  for (let i = 1; i <= 5000000; i += 1) {
+    writeUsers.write(`${i}\n`);
+  }
+};
+
+writeU();
+
+module.exports = {
+  writeU,
+};

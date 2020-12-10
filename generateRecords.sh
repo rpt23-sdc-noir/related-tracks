@@ -63,7 +63,7 @@ seeds+=(./calls/reposts/genP10.js)
 for i in "${seeds[@]}"
 do
   echo "starting to $i"
-  node --max-old-space-size=2048 $i & pid=$!
+  node --max-old-space-size=1024 $i & pid=$!
   wait $pid
   echo "you told me to $i & i have"
 done
