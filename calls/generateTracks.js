@@ -1,4 +1,4 @@
 const { createBigRecord } = require('../seeds/createBR.js');
 const { generateTrack } = require('../utils/generators');
 
-createBigRecord(5000000, generateTrack, 4, 'tracks');
+createBigRecord(2500000, generateTrack, 4, 'tracks');
