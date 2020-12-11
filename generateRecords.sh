@@ -1,18 +1,6 @@
 #!/bin/bash
 echo `date`
 declare -a seeds
-seeds+=(./calls/generateTracks.js)
-seeds+=(./calls/generateTracks2.js)
-seeds+=(./calls/generateTracks3.js)
-seeds+=(./calls/generateTracks4.js)
-seeds+=(./calls/generateUsers.js)
-seeds+=(./calls/generateUsers2.js)
-seeds+=(./calls/generateGenres.js)
-seeds+=(./calls/generateProducers.js)
-seeds+=(./calls/generatePlaylists.js)
-seeds+=(./calls/generatePlaylists2.js)
-seeds+=(./calls/generatePlaylists3.js)
-seeds+=(./calls/generatePlaylists4.js)
 seeds+=(./calls/plays/genPCol.js)
 seeds+=(./calls/plays/genP01.js)
 seeds+=(./calls/plays/genP02.js)
@@ -224,11 +212,6 @@ echo "slaps hood of computer"
 echo "this baby can fit so many records on it"
 unset seeds
 declare -a records
-records+=(data/tracks)
-records+=(data/users)
-records+=(data/playlists)
-records+=(data/genres)
-records+=(data/producers)
 records+=(data/comments)
 records+=(data/likes)
 records+=(data/playlistTracks)

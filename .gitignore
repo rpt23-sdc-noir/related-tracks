@@ -7,3 +7,4 @@ bundle.js.gz
 /data
 .env
 newrelic_agent.log
+newrelic.js

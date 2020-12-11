@@ -1,5 +1,5 @@
 const Router = require('express-promise-router');
-const { addTrack, updateTrack, deleteTrack, findTrack, findTrackData, findRelatedPlaylists, findTrackFromPlaylist, } = require('../../db/postgres/queries.js');
+const { addTrack, updateTrack, deleteTrack, findTrack, findTrackData, findRelatedPlaylists, findTrackFromPlaylist, test, } = require('../../db/postgres/queries.js');
 const { checkCache, client } = require('../../db/redis/client.js');
 // create a new express-promise-router
 // this has the same API as the normal express router except
@@ -19,6 +19,17 @@ const trowka = [
 
 // export our router to be mounted by the parent application
 module.exports = router;
+
+router.get('/test', async (req, res) => {
+  try {
+    let testing = await test();
+    let rows = JSON.stringify(testing.rows);
+    return res.end(rows);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).end();
+  }
+});
 
 router.get('/:id', checkCache, async (req, res) => {
   try {

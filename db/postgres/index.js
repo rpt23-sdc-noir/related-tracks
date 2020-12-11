@@ -1,8 +1,11 @@
+require('dotenv').config();
 const { Pool } = require('pg');
 
 const pool = new Pool({
-  host: 'localhost',
+  host: 'ec2-54-183-113-94.us-west-1.compute.amazonaws.com',
   database: 'sdc',
+  user: process.env.PGUSER,
+  password: process.env.PGPASSWORD,
   max: 20,
   connectionTimeoutMillis: 2000,
 });

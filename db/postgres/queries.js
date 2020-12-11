@@ -1,5 +1,9 @@
 const { query } = require('./index.js');
 
+const test = () => {
+  return query('SELECT * FROM tracks');
+};
+
 let check = true;
 
 const addTrack = function() {
@@ -66,5 +70,6 @@ module.exports = {
   findRelatedPlaylists,
   findTrackFromPlaylist,
   updateTrack,
+  test,
   deleteTrack,
 };
