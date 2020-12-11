@@ -1,4 +1,4 @@
-const {MongoClient} = require('mongodb');
+/*const {MongoClient} = require('mongodb');
 const Enzyme = require('enzyme');
 const Adapter = require('enzyme-adapter-react-16');
 const React = require('react');
@@ -128,4 +128,4 @@ describe('image exists', () => {
 //       done(error);
 //     }
 //   })
-// });
+// });*/

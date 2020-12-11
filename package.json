@@ -15,7 +15,6 @@
     "start-server": "nodemon server"
   },
   "dependencies": {
-    "@shelf/jest-mongodb": "^1.2.3",
     "axios": "^0.20.0",
     "babel-jest": "^26.3.0",
     "body-parser": "^1.19.0",
@@ -24,11 +23,9 @@
     "express": "^4.17.1",
     "express-promise-router": "^4.0.1",
     "express-static-gzip": "^2.1.0",
-    "faker": "^5.1.0",
     "favicon": "0.0.2",
     "jquery": "^3.5.1",
     "merge-files": "^0.1.2",
-    "mongoose": "^5.10.6",
     "morgan": "^1.10.0",
     "newrelic": "^7.0.2",
     "pg": "^8.5.1",
@@ -45,7 +42,6 @@
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-es2015": "^7.0.0-beta.53",
     "@babel/preset-react": "^7.10.4",
-    "artillery": "^1.6.1",
     "babel-loader": "^8.1.0",
     "brotli-webpack-plugin": "^1.1.0",
     "compression-webpack-plugin": "^6.0.4",
