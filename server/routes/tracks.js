@@ -1,5 +1,5 @@
 const Router = require('express-promise-router');
-const { addTrack, updateTrack, deleteTrack, findTrack, findTrackData, findRelatedPlaylists, findTrackFromPlaylist, test, } = require('../../db/postgres/queries.js');
+const { addData, updateData, deleteTrack, findTrackData, findRelatedPlaylists, findTrackFromPlaylist, test, } = require('../../db/postgres/queries.js');
 const { checkCache, client } = require('../../db/redis/client.js');
 // create a new express-promise-router
 // this has the same API as the normal express router except
@@ -53,9 +53,6 @@ router.get('/:id', checkCache, async (req, res) => {
       track.rows[0].song_id = trackId;
       const strung = JSON.stringify(track.rows[0]);
       await client.zadd('relatedtracks', id, strung);
-      // client.zrangebyscore('relatedtracks', id, id, (err, data) => {
-      //   console.log(`data in route: `, data);
-      // });
       res.write(strung);
       if (index < 2) {
         res.write(',');
@@ -87,10 +84,15 @@ router.get('/current/:id', checkCache, async (req, res) => {
   }
 });
 
-router.post('/add', async (req, res) => {
+router.post('/add/:table', async (req, res) => {
   try {
-    await addTrack();
-    return res.status(200).end('track added');
+    const { table } = req.params;
+    const { track, playlist, } = req.body;
+    await addData(table, {
+      track,
+      playlist,
+    });
+    return res.status(200).end('data added');
   } catch (error) {
     console.error(error);
     return res.status(500).end();
