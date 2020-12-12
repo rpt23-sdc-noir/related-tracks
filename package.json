@@ -24,7 +24,6 @@
     "express-promise-router": "^4.0.1",
     "express-static-gzip": "^2.1.0",
     "favicon": "0.0.2",
-    "jquery": "^3.5.1",
     "merge-files": "^0.1.2",
     "morgan": "^1.10.0",
     "newrelic": "^7.0.2",
