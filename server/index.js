@@ -1,7 +1,6 @@
 // require('newrelic');
 const express = require('express');
 const path = require('path');
-const chalk = require('chalk');
 const parser = require('body-parser');
 const morgan = require('morgan');
 const expressStaticGzip = require('express-static-gzip');
@@ -28,5 +27,5 @@ app.get('/:current', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(chalk.yellow(`Listening on port ${port}`));
+  console.log(`Listening on port ${port}`);
 });

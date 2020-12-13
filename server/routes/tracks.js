@@ -1,19 +1,17 @@
 const Router = require('express-promise-router');
 const { addData, updateData, deleteAttribute, findTrackData, findRelatedPlaylists, findTrackFromPlaylist, test, } = require('../../db/postgres/queries.js');
-const { checkCache, client } = require('../../db/redis/client.js');
-// create a new express-promise-router
-// this has the same API as the normal express router except
-// it allows you to use async functions as route handlers
+// const { checkCache, client } = require('../../db/redis/client.js');
+
 const router = new Router();
 const trowka = [
   {
-    playlist_id: (Math.floor(Math.random() * 10000000) + 1),
+    playlist: (Math.floor(Math.random() * 10000000) + 1),
   },
   {
-    playlist_id: (Math.floor(Math.random() * 10000000) + 1),
+    playlist: (Math.floor(Math.random() * 10000000) + 1),
   },
   {
-    playlist_id: (Math.floor(Math.random() * 10000000) + 1),
+    playlist: (Math.floor(Math.random() * 10000000) + 1),
   }
 ];
 
@@ -31,7 +29,7 @@ router.get('/test', async (req, res) => {
   }
 });
 
-router.get('/:id', checkCache, async (req, res) => {
+router.get('/:id', /*checkCache, */async (req, res) => {
   try {
     let { id } = req.params;
     id = parseInt(id);
@@ -40,11 +38,11 @@ router.get('/:id', checkCache, async (req, res) => {
     res.write('[');
     await rows.reduce(async (memo, row, index) => {
       await memo;
-      let tracks = await findTrackFromPlaylist(row.playlist_id, id);
+      let tracks = await findTrackFromPlaylist(row.playlist, id);
       if (tracks.rows.length < 1) {
         tracks.rows = [
           {
-            track_id: (Math.floor(Math.random() * (id - 1)) + 1),
+            track: (Math.floor(Math.random() * (id - 1)) + 1),
           }
         ]
       }
@@ -52,7 +50,7 @@ router.get('/:id', checkCache, async (req, res) => {
       let track = await findTrackData(trackId);
       track.rows[0].song_id = trackId;
       const strung = JSON.stringify(track.rows[0]);
-      await client.zadd('relatedtracks', id, strung);
+      // await client.zadd('relatedtracks', id, strung);
       res.write(strung);
       if (index < 2) {
         res.write(',');
@@ -65,7 +63,7 @@ router.get('/:id', checkCache, async (req, res) => {
   }
 });
 
-router.get('/current/:id', checkCache, async (req, res) => {
+router.get('/current/:id', /*checkCache, */async (req, res) => {
   try {
     let { id } = req.params;
     id = parseInt(id);
