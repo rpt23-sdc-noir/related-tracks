@@ -35,19 +35,15 @@ const findTrackFromPlaylist = (id, track) => {
   return query(text, null);
 };
 
-const updateData = function(table, data) {
-  const { now, old, } = data;
-  if (table !== 'playlistTracks') {
-    return null;
-  } else {
-    const text = `UPDATE playlistTracks SET (track) = (${now}) WHERE track = ${old}`;
-    return query(text, null);
-  }
+const updateData = function(data) {
+  const { updated, old, } = data;
+  const text = `UPDATE playlistTracks SET playlist = ${updated} WHERE playlist = ${old}`;
+  return query(text, null);
 };
 
-const deleteTrack = function (table, id) {
-  if (table === 'plays' || table === 'likes' || table === 'reposts' || table === 'comments') {
-    const text = `DELETE FROM ${table} WHERE track_id = ${id} LIMIT 1 RETURNING *`;
+const deleteAttribute = function (table, id) {
+  if (table === 'likes' || table === 'reposts' || table === 'comments') {
+    const text = `DELETE FROM ${table} WHERE track_id = ${id} AND id IN (SELECT id FROM ${table} WHERE track_id = ${id} LIMIT 1) RETURNING *`;
     return query(text, null);
   }
   return null;
@@ -60,5 +56,5 @@ module.exports = {
   findTrackFromPlaylist,
   updateData,
   test,
-  deleteTrack,
+  deleteAttribute,
 };
