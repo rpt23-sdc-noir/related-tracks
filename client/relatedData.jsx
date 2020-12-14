@@ -38,6 +38,11 @@ class RelatedTracks extends React.Component {
   }
 
   updateRelated(data) {
+    if (typeof data[0] === 'string') {
+      data.forEach((datum, index) => {
+        data[index] = JSON.parse(datum);
+      });
+    }
     this.setState({
       related: data,
     });
