@@ -8,3 +8,6 @@ bundle.js.gz
 .env
 newrelic_agent.log
 newrelic.js
+loaderio.txt
+check.js
+

@@ -11,6 +11,9 @@ const port = 3001;
 
 app.use(parser.json());
 app.use(morgan('dev'));
+app.get('/loaderio-201678e4805e9e7f098654379b1fa236/', (req, res) => {
+  res.send('loaderio-201678e4805e9e7f098654379b1fa236');
+});
 app.use('/relatedTracks', tracks);
 
 // app.use(express.static(path.join(__dirname, '../public')));

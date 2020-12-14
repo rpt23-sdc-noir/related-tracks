@@ -6,7 +6,7 @@ const pool = new Pool({
   database: 'sdc',
   user: process.env.PGUSER,
   password: process.env.PGPASSWORD,
-  max: 20,
+  max: 100,
   connectionTimeoutMillis: 2000,
 });
 

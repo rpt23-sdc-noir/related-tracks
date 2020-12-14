@@ -1,6 +1,10 @@
 const redis = require('redis');
 
-const client = redis.createClient(6379); // 'redis://18.144.167.166:6379'
+const client = redis.createClient('redis://13.52.251.80:6379');
+
+client.on('error', (error) => {
+  console.log(error);
+});
 
 const checkCache = (req, res, next) => {
   let { id } = req.params;
@@ -8,7 +12,6 @@ const checkCache = (req, res, next) => {
   if (id < 1 || id > 10000000 || id !== id) {
     return res.status(400).end('no such track');
   }
-
   client.zrangebyscore('relatedtracks', id, id, (err, data) => {
     console.log(`data len: `, data.length);
     if (err) {

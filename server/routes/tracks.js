@@ -1,6 +1,6 @@
 const Router = require('express-promise-router');
 const { addData, updateData, deleteAttribute, findTrackData, findRelatedPlaylists, findTrackFromPlaylist, test, } = require('../../db/postgres/queries.js');
-// const { checkCache, client } = require('../../db/redis/client.js');
+const { checkCache, client } = require('../../db/redis/client.js');
 
 const router = new Router();
 const trowka = [
@@ -29,7 +29,7 @@ router.get('/test', async (req, res) => {
   }
 });
 
-router.get('/:id', /*checkCache, */async (req, res) => {
+router.get('/:id', checkCache, async (req, res) => {
   try {
     let { id } = req.params;
     id = parseInt(id);
@@ -46,11 +46,11 @@ router.get('/:id', /*checkCache, */async (req, res) => {
           }
         ]
       }
-      let trackId = tracks.rows[0].track_id;
+      let trackId = tracks.rows[0].track;
       let track = await findTrackData(trackId);
       track.rows[0].song_id = trackId;
       const strung = JSON.stringify(track.rows[0]);
-      // await client.zadd('relatedtracks', id, strung);
+      await client.zadd('relatedtracks', id, strung);
       res.write(strung);
       if (index < 2) {
         res.write(',');
@@ -63,7 +63,7 @@ router.get('/:id', /*checkCache, */async (req, res) => {
   }
 });
 
-router.get('/current/:id', /*checkCache, */async (req, res) => {
+router.get('/current/:id', checkCache, async (req, res) => {
   try {
     let { id } = req.params;
     id = parseInt(id);
