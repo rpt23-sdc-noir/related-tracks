@@ -21,6 +21,7 @@ const checkCache = (req, res, next) => {
     if (data.length !== 3) {
       next();
     } else {
+      console.log('data: ', data);
       res.send(data);
     }
   });
