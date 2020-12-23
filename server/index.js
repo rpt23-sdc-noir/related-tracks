@@ -1,7 +1,7 @@
-require('newrelic');
+// require('newrelic');
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const chalk = require('chalk');
 const parser = require('body-parser');
 const morgan = require('morgan');
 const expressStaticGzip = require('express-static-gzip');
@@ -12,6 +12,9 @@ const port = 3001;
 
 app.use(parser.json());
 app.use(morgan('dev'));
+app.get(`/${process.env.LOADER}/`, (req, res) => {
+  res.send(process.env.LOADER);
+});
 app.use('/relatedTracks', tracks);
 
 // app.use(express.static(path.join(__dirname, '../public')));
@@ -28,5 +31,5 @@ app.get('/:current', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(chalk.yellow(`Listening on port ${port}`));
+  console.log(`Listening on port ${port}`);
 });
