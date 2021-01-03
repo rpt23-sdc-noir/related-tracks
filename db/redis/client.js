@@ -1,6 +1,6 @@
 const redis = require('redis');
 
-const client = redis.createClient('redis://18.144.168.141:6379');
+const client = redis.createClient('redis://52.53.162.210:6379');
 
 client.on('error', (error) => {
   console.log(error);

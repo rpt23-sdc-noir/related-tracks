@@ -1,4 +1,4 @@
-// require('newrelic');
+require('newrelic');
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
@@ -13,11 +13,12 @@ const port = 3001;
 app.use(parser.json());
 app.use(morgan('dev'));
 app.get(`/${process.env.LOADER}/`, (req, res) => {
+  console.log('attempted to go to loader.io page');
   res.send(process.env.LOADER);
 });
 app.use('/relatedTracks', tracks);
 
-// app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '../public')));
 app.use('/', expressStaticGzip(path.join(__dirname, '../public'), {
   enableBrotli: true,
    orderPreference: ['br', 'gz'],
