@@ -25,6 +25,26 @@ const findTrackData = function(id) {
   return query(text, null);
 };
 
+const findPlays = function(id) {
+  const text = `SELECT COUNT(*) FROM plays WHERE track = ${id}`;
+  return query(text, null);
+};
+
+const findLikes = function(id) {
+  const text = `SELECT COUNT(*) FROM likes WHERE track = ${id}`;
+  return query(text, null);
+};
+
+const findComments = function(id) {
+  const text = `SELECT COUNT(*) FROM comments WHERE track = ${id}`;
+  return query(text, null);
+};
+
+const findReposts = function(id) {
+  const text = `SELECT COUNT(*) FROM reposts WHERE track = ${id}`;
+  return query(text, null);
+};
+
 const findRelatedPlaylists = (id) => {
   const text = `SELECT playlist FROM playlistTracks WHERE track = ${id} LIMIT 3`;
   return query(text, null);
@@ -52,6 +72,10 @@ const deleteAttribute = function (table, id) {
 module.exports = {
   addData,
   findTrackData,
+  findPlays,
+  findLikes,
+  findComments,
+  findReposts,
   findRelatedPlaylists,
   findTrackFromPlaylist,
   updateData,

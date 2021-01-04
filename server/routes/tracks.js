@@ -1,5 +1,5 @@
 const Router = require('express-promise-router');
-const { addData, updateData, deleteAttribute, findTrackData, findRelatedPlaylists, findTrackFromPlaylist, test, } = require('../../db/postgres/queries.js');
+const { addData, updateData, deleteAttribute, findTrackData, findRelatedPlaylists, findTrackFromPlaylist, test, findPlays, findLikes, findComments, findReposts, } = require('../../db/postgres/queries.js');
 const { checkCache, client } = require('../../db/redis/client.js');
 
 const router = new Router();
@@ -47,9 +47,24 @@ router.get('/:id', checkCache, async (req, res) => {
         ]
       }
       let trackId = tracks.rows[0].track;
-      let track = await findTrackData(trackId);
-      track.rows[0].song_id = trackId;
-      const strung = JSON.stringify(track.rows[0]);
+      let plays = await findPlays(trackId);
+      let likes = await findLikes(trackId);
+      let comments = await findComments(trackId);
+      let reposts = await findReposts(trackId);
+      plays = plays.rows[0].count;
+      likes = likes.rows[0].count;
+      comments = comments.rows[0].count;
+      reposts = reposts.rows[0].count;
+      console.log(plays);
+      let track = {
+        plays,
+        likes,
+        comments,
+        reposts,
+        song_id: trackId,
+      };
+      console.log(track);
+      const strung = JSON.stringify(track);
       await client.zadd('relatedtracks', id, strung);
       res.write(strung);
       if (index < 2) {
