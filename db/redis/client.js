@@ -18,7 +18,7 @@ const checkCache = (req, res, next) => {
       console.log(err);
       res.status(500).send(err);
     }
-    if (data.length !== 3) {
+    if (data.length !== 1) {
       next();
     } else {
       console.log('data: ', data);
