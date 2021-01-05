@@ -20,8 +20,27 @@ const addData = (table, data) => {
   }
 };
 
-const findTrackData = function(id) {
-  const text = `SELECT (SELECT COUNT(*) FROM plays WHERE track = ${id}) AS plays, (SELECT COUNT(*) FROM likes WHERE track = ${id}) AS likes,(SELECT COUNT(*) FROM reposts WHERE track = ${id}) AS reposts, (SELECT COUNT(*) FROM comments WHERE track = ${id}) AS comments`;
+const getInfo = function(id) {
+  const text = `WITH ptracks AS (
+    SELECT DISTINCT ON (playlist) track FROM playlistTracks WHERE playlist IN (SELECT playlist FROM playlistTracks WHERE track = ${id} LIMIT 3) AND track <> ${id} ORDER BY playlist, track DESC),
+    trackplays AS (
+    SELECT plays.track, COUNT(*) FROM plays WHERE track IN (SELECT track FROM ptracks) GROUP BY plays.track
+    ),
+    tracklikes as (
+    SELECT likes.track, COUNT(*) FROM likes WHERE track IN (SELECT track FROM ptracks) GROUP BY likes.track
+    ),
+    trackcomments as (
+    SELECT comments.track, COUNT(*) FROM comments WHERE track IN (SELECT track FROM ptracks) GROUP BY comments.track
+    ),
+    trackreposts as (
+    SELECT reposts.track, COUNT(*) FROM reposts WHERE track IN (SELECT track FROM ptracks) GROUP BY reposts.track
+    )
+    SELECT DISTINCT ON (track)trackplays.track, trackplays.count AS playcount, tracklikes.count AS likecount, trackcomments.count AS commentcount, trackreposts.count AS repostcount FROM trackplays, tracklikes, trackcomments, trackreposts WHERE trackplays.track = tracklikes.track AND trackplays.track = trackcomments.track AND trackplays.track = trackreposts.track`;
+    return query(text, null);
+};
+
+const findTrackData = function(id1, id2, id3, track) {
+  const text = `SELECT (SELECT COUNT(*) FROM plays WHERE track = (SELECT track FROM playlistTracks WHERE playlist = ${id1} AND track <> ${track} LIMIT 1)) AS plays1, (SELECT COUNT(*) FROM likes WHERE track = (SELECT track FROM playlistTracks WHERE playlist = ${id1} AND track <> ${track} LIMIT 1)) AS likes1,(SELECT COUNT(*) FROM reposts WHERE track = (SELECT track FROM playlistTracks WHERE playlist = ${id1} AND track <> ${track} LIMIT 1)) AS reposts1, (SELECT COUNT(*) FROM comments WHERE track = (SELECT track FROM playlistTracks WHERE playlist = ${id1} AND track <> ${track} LIMIT 1)) AS comments1, (SELECT COUNT(*) FROM plays WHERE track = (SELECT track FROM playlistTracks WHERE playlist = ${id2} AND track <> ${track} LIMIT 1)) AS plays2, (SELECT COUNT(*) FROM likes WHERE track = (SELECT track FROM playlistTracks WHERE playlist = ${id2} AND track <> ${track} LIMIT 1)) AS likes2,(SELECT COUNT(*) FROM reposts WHERE track = (SELECT track FROM playlistTracks WHERE playlist = ${id2} AND track <> ${track} LIMIT 1)) AS reposts2, (SELECT COUNT(*) FROM comments WHERE track = (SELECT track FROM playlistTracks WHERE playlist = ${id2} AND track <> ${track} LIMIT 1)) AS comments2, (SELECT COUNT(*) FROM plays WHERE track = (SELECT track FROM playlistTracks WHERE playlist = ${id3} AND track <> ${track} LIMIT 1)) AS plays3, (SELECT COUNT(*) FROM likes WHERE track = (SELECT track FROM playlistTracks WHERE playlist = ${id3} AND track <> ${track} LIMIT 1)) AS likes3,(SELECT COUNT(*) FROM reposts WHERE track = (SELECT track FROM playlistTracks WHERE playlist = ${id3} AND track <> ${track} LIMIT 1)) AS reposts3, (SELECT COUNT(*) FROM comments WHERE track = (SELECT track FROM playlistTracks WHERE playlist = ${id3} AND track <> ${track} LIMIT 1)) AS comments3`;
   return query(text, null);
 };
 
@@ -80,5 +99,22 @@ module.exports = {
   findTrackFromPlaylist,
   updateData,
   test,
+  getInfo,
   deleteAttribute,
 };
+
+/*`WITH ptracks AS (
+  SELECT DISTINCT ON (playlist) track FROM playlistTracks WHERE playlist IN (SELECT playlist FROM playlistTracks WHERE track = ${id} LIMIT 3) AND track <> ${id} ORDER BY playlist, track DESC),
+  trackplays AS (
+  SELECT plays.track, COUNT(*) FROM plays WHERE track IN (SELECT track FROM ptracks) GROUP BY plays.track
+  ),
+  tracklikes as (
+  SELECT likes.track, COUNT (*) FROM likes WHERE track IN (SELECT track FROM ptracks) GROUP BY likes.track
+  ),
+  trackcomments as (
+  SELECT comments.track, COUNT (*) FROM comments WHERE track IN (SELECT track FROM ptracks) GROUP BY comments.track
+  ),
+  trackreposts as (
+  SELECT reposts.track, COUNT (*) FROM reposts WHERE track IN (SELECT track FROM ptracks) GROUP BY reposts.track
+  )
+  SELECT DISTINCT ON (track)trackplays.track, trackplays.count, tracklikes.count, trackcomments.count, trackreposts.count FROM trackplays, tracklikes, trackcomments, trackreposts WHERE trackplays.track = tracklikes.track AND trackplays.track = trackcomments.track AND trackplays.track = trackreposts.track;`*/

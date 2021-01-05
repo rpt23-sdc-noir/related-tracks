@@ -1,5 +1,5 @@
 const Router = require('express-promise-router');
-const { addData, updateData, deleteAttribute, findTrackData, findRelatedPlaylists, findTrackFromPlaylist, test, findPlays, findLikes, findComments, findReposts, } = require('../../db/postgres/queries.js');
+const { addData, updateData, deleteAttribute, findTrackData, findRelatedPlaylists, findTrackFromPlaylist, test, getInfo } = require('../../db/postgres/queries.js');
 const { checkCache, client } = require('../../db/redis/client.js');
 
 const router = new Router();
@@ -33,45 +33,59 @@ router.get('/:id', checkCache, async (req, res) => {
   try {
     let { id } = req.params;
     id = parseInt(id);
-    let { rows } = await findRelatedPlaylists(id);
-    rows = rows.concat(trowka).slice(0, 3);
-    res.write('[');
-    await rows.reduce(async (memo, row, index) => {
-      await memo;
-      let tracks = await findTrackFromPlaylist(row.playlist, id);
-      if (tracks.rows.length < 1) {
-        tracks.rows = [
-          {
-            track: (Math.floor(Math.random() * (id - 1)) + 1),
-          }
-        ]
-      }
-      let trackId = tracks.rows[0].track;
-      let plays = await findPlays(trackId);
-      let likes = await findLikes(trackId);
-      let comments = await findComments(trackId);
-      let reposts = await findReposts(trackId);
-      plays = plays.rows[0].count;
-      likes = likes.rows[0].count;
-      comments = comments.rows[0].count;
-      reposts = reposts.rows[0].count;
-      console.log(plays);
-      let track = {
-        plays,
-        likes,
-        comments,
-        reposts,
-        song_id: trackId,
-      };
-      console.log(track);
-      const strung = JSON.stringify(track);
-      await client.zadd('relatedtracks', id, strung);
-      res.write(strung);
-      if (index < 2) {
-        res.write(',');
-      }
-    }, undefined);
-    return res.status(200).end(']');
+    let { rows } = await getInfo(id);
+    console.log(rows);
+    let tracks = [];
+    for (let i = 0; i < rows.length; i += 1) {
+      let current = rows[i];
+      let track = {};
+      track.song_id = current.track;
+      track.plays = current.playcount;
+      track.likes = current.likecount;
+      track.comments = current.commentcount;
+      track.reposts = current.repostcount;
+      tracks.push(track);
+    }
+    const strung = JSON.stringify(tracks);
+    await client.zadd('relatedtracks', id, strung);
+    res.status(200).end(strung);
+    // rows = rows.concat(trowka).slice(0, 3);
+    // res.write('[');
+    // await rows.reduce(async (memo, row, index) => {
+    //   await memo;
+    //   let tracks = await findTrackFromPlaylist(row.playlist, id);
+    //   if (tracks.rows.length < 1) {
+    //     tracks.rows = [
+    //       {
+    //         track: (Math.floor(Math.random() * (id - 1)) + 1),
+    //       }
+    //     ]
+    //   }
+    //   let trackId = tracks.rows[0].track;
+    //   let plays = await findPlays(trackId);
+    //   let likes = await findLikes(trackId);
+    //   let comments = await findComments(trackId);
+    //   let reposts = await findReposts(trackId);
+    //   plays = plays.rows[0].count;
+    //   likes = likes.rows[0].count;
+    //   comments = comments.rows[0].count;
+    //   reposts = reposts.rows[0].count;
+    //   console.log(plays);
+    //   let track = {
+    //     plays,
+    //     likes,
+    //     comments,
+    //     reposts,
+    //     song_id: trackId,
+    //   };
+    //   console.log(track);
+    //   const strung = JSON.stringify(track);
+    //   res.write(strung);
+    //   if (index < 2) {
+    //     res.write(',');
+    //   }
+    // }, undefined);
+    // return res.status(200).end(']');
   } catch (error) {
     console.error(error);
     return res.status(500).end();
