@@ -13,7 +13,20 @@ const pool = new Pool({
 
 module.exports = {
   query: (text, params) => {
-    const start = Date.now();
-    return pool.query(text, params);
+    return pool
+      .connect()
+      .then((client) => {
+        return client
+          .query(text, params)
+          .then(async (res) => {
+            // console.log('res: ', res);
+            await client.release();
+            return res;
+          })
+          .catch((err) => {
+            client.release();
+            console.log(err.stack);
+          });
+      });
   },
 };
