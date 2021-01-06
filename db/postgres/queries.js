@@ -22,20 +22,8 @@ const addData = (table, data) => {
 
 const getInfo = function(id) {
   const text = `WITH ptracks AS (
-    SELECT DISTINCT ON (playlist) track FROM playlistTracks WHERE playlist IN (SELECT playlist FROM playlistTracks WHERE track = ${id} LIMIT 3) AND track <> ${id} ORDER BY playlist, track DESC),
-    trackplays AS (
-    SELECT plays.track, COUNT(*) FROM plays WHERE track IN (SELECT track FROM ptracks) GROUP BY plays.track
-    ),
-    tracklikes as (
-    SELECT likes.track, COUNT(*) FROM likes WHERE track IN (SELECT track FROM ptracks) GROUP BY likes.track
-    ),
-    trackcomments as (
-    SELECT comments.track, COUNT(*) FROM comments WHERE track IN (SELECT track FROM ptracks) GROUP BY comments.track
-    ),
-    trackreposts as (
-    SELECT reposts.track, COUNT(*) FROM reposts WHERE track IN (SELECT track FROM ptracks) GROUP BY reposts.track
-    )
-    SELECT DISTINCT ON (track)trackplays.track, trackplays.count AS playcount, tracklikes.count AS likecount, trackcomments.count AS commentcount, trackreposts.count AS repostcount FROM trackplays, tracklikes, trackcomments, trackreposts WHERE trackplays.track = tracklikes.track AND trackplays.track = trackcomments.track AND trackplays.track = trackreposts.track`;
+    SELECT DISTINCT ON (playlist) track FROM playlistTracks WHERE playlist IN (SELECT playlist FROM playlistTracks WHERE track = ${id} LIMIT 3) AND track <> ${id} ORDER BY playlist, track DESC)
+    SELECT * FROM counts WHERE track IN (SELECT track FROM ptracks)`;
     return query(text, null);
 };
 

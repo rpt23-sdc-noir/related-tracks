@@ -6,7 +6,7 @@ const pool = new Pool({
   database: 'postgres',
   user: process.env.PGUSER,
   password: process.env.PGPWD,
-  max: 10,
+  max: 95,
   connectionTimeoutMillis: 2000,
   idleTimeoutMillis: 0,
 });
