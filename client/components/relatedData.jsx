@@ -21,7 +21,7 @@ class RelatedTracks extends React.Component {
               ],
       bands: [
                 'Siouxsie & the Banshees',
-                'Yun Jan',
+                'JB',
                 'The Strokes',
               ],
     }

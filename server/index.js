@@ -1,4 +1,4 @@
-require('newrelic');
+// require('newrelic');
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
@@ -7,6 +7,10 @@ const morgan = require('morgan');
 const expressStaticGzip = require('express-static-gzip');
 const app = express();
 const tracks = require('./routes/tracks.js');
+const React = require('react');
+const ReactDOMServer = require('react');
+const fs = require('fs');
+
 
 const port = 3001;
 
