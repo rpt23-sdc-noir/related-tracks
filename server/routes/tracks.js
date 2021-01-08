@@ -34,7 +34,7 @@ router.get('/:id', checkCache, async (req, res) => {
     let { id } = req.params;
     id = parseInt(id);
     let { rows } = await getInfo(id);
-    console.log(rows);
+    // console.log(rows);
     let tracks = [];
     for (let i = 0; i < rows.length; i += 1) {
       let current = rows[i];
@@ -47,6 +47,7 @@ router.get('/:id', checkCache, async (req, res) => {
       tracks.push(track);
     }
     const strung = JSON.stringify(tracks);
+    // console.log(strung);
     await client.zadd('relatedtracks', id, strung);
     res.status(200).end(strung);
     // rows = rows.concat(trowka).slice(0, 3);

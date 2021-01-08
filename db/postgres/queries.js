@@ -21,9 +21,7 @@ const addData = (table, data) => {
 };
 
 const getInfo = function(id) {
-  const text = `WITH ptracks AS (
-    SELECT DISTINCT ON (playlist) track FROM playlistTracks WHERE playlist IN (SELECT playlist FROM playlistTracks WHERE track = ${id} LIMIT 3) AND track <> ${id} ORDER BY playlist, track DESC)
-    SELECT * FROM counts WHERE track IN (SELECT track FROM ptracks)`;
+  const text = `SELECT * FROM counts WHERE track IN (SELECT track FROM related_playlists WHERE playlist IN (SELECT playlist FROM playlists WHERE track = ${id}) AND track <> ${id} LIMIT 3)`;
     return query(text, null);
 };
 
