@@ -13,7 +13,7 @@ const checkCache = (req, res, next) => {
     return res.status(400).end('no such track');
   }
   client.zrangebyscore('relatedtracks', id, id, (err, data) => {
-    console.log(`data len: `, data.length);
+    // console.log(`data len: `, data.length);
     if (err) {
       console.log(err);
       res.status(500).send(err);
@@ -21,8 +21,7 @@ const checkCache = (req, res, next) => {
     if (data.length !== 1) {
       next();
     } else {
-      console.log('data: ', data);
-      res.send(data);
+      res.send(data[0]);
     }
   });
 };
