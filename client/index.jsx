@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import RelatedTracks from '../relatedData.jsx';
+import RelatedTracks from './components/relatedData.jsx';
 import '../public/styles/styles.css';
 
-ReactDOM.render(<RelatedTracks />, document.getElementById('related'));
+ReactDOM.hydrate(<RelatedTracks />, document.getElementById('related'));

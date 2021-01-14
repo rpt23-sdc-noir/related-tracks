@@ -48,7 +48,7 @@ router.get('/:id'/*, checkCache*/, async (req, res) => {
     }
     const strung = JSON.stringify(tracks);
     // console.log(strung);
-    await client.zadd('relatedtracks', id, strung);
+    // await client.zadd('relatedtracks', id, strung);
     res.status(200).end(strung);
     // rows = rows.concat(trowka).slice(0, 3);
     // res.write('[');
