@@ -1,11 +1,13 @@
 require('newrelic');
 require('dotenv').config();
+const compression = require('compression');
 const express = require('express');
 const path = require('path');
 const parser = require('body-parser');
 const morgan = require('morgan');
 const expressStaticGzip = require('express-static-gzip');
 const app = express();
+app.use(compression());
 const tracks = require('./routes/tracks.js');
 
 const port = 3001;
